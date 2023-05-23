@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  back:
+    build:
+      context: ./
+      dockerfile: ./backend/Dockerfile
+      target: dev
+    volumes:
+      - ./backend/src:/workdir/src
+      - ./backend/public:/workdir/public
+    command: npm run startgood
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      DEBUG: nodejs-docker-express:*
+    networks:
+      - checkpoint_back_lan
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    depends_on:
+      - bdd
+
+  bdd:
+    build:
+      context: ./
+      dockerfile: ./bdd/Dockerfile
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./mariadb/home:/root
+      # - ./bdd/config/my.cnf:/etc/mysql/my.cnf
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    networks:
+      - checkpoint_back_lan
+    restart: always
+
+networks:
+  checkpoint_back_lan:
+    driver: bridge

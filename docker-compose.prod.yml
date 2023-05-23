@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  back:
+    build:
+      context: ./
+      dockerfile: ./backend/Dockerfile
+      target: production
+    volumes:
+      - ./backend/public:/workdir/public
+    command: ts-node dist/index.js
+    ports:
+      - "4000:4000"
+    networks:
+      - checkpoint_back_lan
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    depends_on:
+      - bdd
+
+  bdd:
+    build:
+      context: ./
+      dockerfile: ./bdd/Dockerfile
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./mariadb/home:/root
+    # ports:
+    #   - "3307:3306"
+    networks:
+      - checkpoint_back_lan
+    restart: always
+
+networks:
+  checkpoint_back_lan:
+    driver: bridge
