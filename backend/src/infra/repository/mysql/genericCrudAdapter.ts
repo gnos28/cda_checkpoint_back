@@ -1,6 +1,11 @@
 import { Repository } from "./@types";
 
-export type Adapter<T, U> = {
+type RequiredId<T> = Omit<T, "id"> & {
+  id: number;
+};
+type Req<U> = RequiredId<U>;
+
+export type Adapter<T> = {
   validate: (
     data: Partial<T>,
     forCreation?: boolean
@@ -14,9 +19,9 @@ export type Adapter<T, U> = {
       }
     | undefined;
 
-  find: (id: number) => Promise<U>;
+  find: (id: number) => Promise<Req<T>>;
 
-  findAll: () => Promise<U[]>;
+  findAll: () => Promise<Req<T>[]>;
 
   delete_: (id: number) => Promise<{
     affectedRows: number;
@@ -37,7 +42,7 @@ export type Adapter<T, U> = {
 /**
  * adapter to mysql db + JOI
  */
-const createCrudAdapter = <T, U>(repository: Repository<T, U>) => ({
+const createCrudAdapter = <T>(repository: Repository<T>) => ({
   validate: (data: Partial<T>, forCreation?: boolean) => {
     const validationErrors = repository.validate(data, forCreation);
     if (!validationErrors) return undefined;

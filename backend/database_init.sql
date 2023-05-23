@@ -9,8 +9,8 @@ CREATE TABLE continents (
 CREATE TABLE countries (
   id int(11) NOT NULL AUTO_INCREMENT,
   continents_id int,
-  code TEXT,
   name TEXT,
+  code TEXT,
   native TEXT,
   phone TEXT,
   capital TEXT,

@@ -1,7 +1,6 @@
 import Fastify from "fastify";
 import { yoga } from "./yoga/yoga";
 import * as dotenv from "dotenv";
-import mysql from "@fastify/mysql";
 
 dotenv.config();
 
@@ -58,16 +57,16 @@ fastify.get("/", async (request, reply) => {
   return { hello: "world" };
 });
 
-const { DB_USER, DB_PORT, DB_HOST, DB_PASSWORD, DB_NAME } = process.env;
+// const { DB_USER, DB_PORT, DB_HOST, DB_PASSWORD, DB_NAME } = process.env;
 
-fastify.register(mysql, {
-  promise: true,
-  host: DB_HOST,
-  port: parseInt(DB_PORT || "3306"),
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-});
+// fastify.register(mysql, {
+//   promise: true,
+//   host: DB_HOST,
+//   port: parseInt(DB_PORT || "3306"),
+//   user: DB_USER,
+//   password: DB_PASSWORD,
+//   database: DB_NAME,
+// });
 
 // fastify.register(dbConnector);
 // fastify.register(yoga);

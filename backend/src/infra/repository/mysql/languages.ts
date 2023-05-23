@@ -1,14 +1,14 @@
 import Joi from "joi";
 import { RequiredId, SqlDataReturn } from "./@types";
 import { mysqlPool } from ".";
-import { Continent } from "../../../domain/@types";
+import { Language } from "../../../domain/@types";
 
 type Presence = "required" | "optional";
-type ReqContinent = RequiredId<Continent>;
+type ReqLanguage = RequiredId<Language>;
 
-const table = "continents";
+const table = "languages";
 
-const validate = (data: Partial<Continent>, forCreation = true) => {
+const validate = (data: Partial<Language>, forCreation = true) => {
   const presence: Presence = forCreation ? "required" : "optional";
 
   return Joi.object({
@@ -17,29 +17,29 @@ const validate = (data: Partial<Continent>, forCreation = true) => {
   }).validate(data, { abortEarly: false }).error;
 };
 
-const find = async (id: number): SqlDataReturn<ReqContinent> =>
+const find = async (id: number): SqlDataReturn<ReqLanguage> =>
   (await mysqlPool()).query(`select * from  ${table} where id = ?`, [
     id,
-  ]) as SqlDataReturn<ReqContinent>;
+  ]) as SqlDataReturn<ReqLanguage>;
 
-const findAll = async (): SqlDataReturn<ReqContinent> =>
+const findAll = async (): SqlDataReturn<ReqLanguage> =>
   (await mysqlPool()).query(
     `select * from  ${table}`
-  ) as SqlDataReturn<ReqContinent>;
+  ) as SqlDataReturn<ReqLanguage>;
 
 const delete_ = async (id: number) =>
   (await mysqlPool()).query(`delete from ${table} where id = ?`, [id]);
 
-const insert = async (data: Continent) =>
+const insert = async (data: Language) =>
   (await mysqlPool()).query(`insert into ${table} (code, name) values (?, ?)`, [
     data.code,
     data.name,
   ]);
 
-const update = async (data: Partial<Continent>, id: number) =>
+const update = async (data: Partial<Language>, id: number) =>
   (await mysqlPool()).query(`update ${table} set ? where id = ?`, [data, id]);
 
-const continentRepository = {
+const languagesRepository = {
   validate,
   find,
   findAll,
@@ -48,4 +48,4 @@ const continentRepository = {
   update,
 };
 
-export { continentRepository };
+export { languagesRepository };

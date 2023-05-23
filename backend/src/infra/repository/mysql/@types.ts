@@ -8,19 +8,17 @@ import Joi from "joi";
 
 export type SqlDataReturn<T> = Promise<[T[], FieldPacket[]]>;
 
-export type User = { id?: number; email: string; password_hash: string };
-
-export type ReqUser = Omit<User, "id"> & {
+export type RequiredId<T> = Omit<T, "id"> & {
   id: number;
 };
 
-export type Repository<T, U> = {
+export type Repository<T> = {
   validate: (
     data: Partial<T>,
     forCreation?: boolean
   ) => Joi.ValidationError | undefined;
-  find: (id: number) => SqlDataReturn<U>;
-  findAll: () => SqlDataReturn<U>;
+  find: (id: number) => SqlDataReturn<RequiredId<T>>;
+  findAll: () => SqlDataReturn<RequiredId<T>>;
   delete_: (
     id: number
   ) => Promise<
