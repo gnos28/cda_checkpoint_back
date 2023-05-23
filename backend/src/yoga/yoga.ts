@@ -66,7 +66,10 @@ export const yoga = createYoga<{
     resolvers: {
       Query: {
         Continent: () => getContinentUseCase(getContinentUseCaseAdapter)(),
-        Countries: () => getCountriesUseCase(getCountriesUseCaseAdapter)(),
+        Countries: (_, __, context) =>
+          getCountriesUseCase(getCountriesUseCaseAdapter)({
+            query: context.params.query,
+          }),
         Languages: () => getLanguagesUseCase(getLanguagesUseCaseAdapter)(),
         States: () => getStatesUseCase(getStatesUseCaseAdapter)(),
       },
